@@ -1,4 +1,4 @@
 <center>
-  <h1>ORMS</h1>
-  <h2>ORF Record Management System</h2>
+  <h1>Hiker's Meetup</h1>
+  <h2>The Ultimate Hiking Hiker's Platform</h2>
 </center>
