@@ -1,0 +1,7 @@
+{
+    "yas": {
+        "url": "ldap://as.ykgw.net",
+        "baseDN": "dc=ykgw,dc=net"
+    },
+    "jwt-secret" : "poopoochou@pepepoopoo"
+}

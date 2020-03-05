@@ -1,0 +1,149 @@
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+
+import { ValidatorService } from '../../common/validator/validator.service';
+import { BaseService } from '../../common/service/base.service';
+import { User } from '../_entity/user.entity';
+import { RoleAccess } from './_entity-dto/roleaccess.entity';
+import { Auth } from './_entity-dto/auth.entity';
+import { AuthAuthenticateOneDto } from './_entity-dto/authauthenticateone.dto';
+import { JwtPayload } from '../_entity/jwt-payload.entity';
+
+import * as ActiveDirectory from 'activedirectory';
+
+@Injectable()
+export class AuthService extends BaseService {
+    constructor(
+        @InjectRepository(User)
+        private repository: Repository<User>,
+        @InjectRepository(RoleAccess)
+        private roleAccessRepository: Repository<RoleAccess>,
+        private jwtService: JwtService,
+        private readonly validatorService: ValidatorService
+    ) {
+        super();
+        this.class_name = this.constructor.name;
+    }
+
+
+    async authenticateUser(itemDto: AuthAuthenticateOneDto): Promise<{accessToken: string}> {
+        try {
+            const item = Auth.CreateReadOneObject(itemDto);
+            this.validatorService.clean(item);
+            let user = await this.repository.findOne({ _email: itemDto._email });
+
+            if (!user) {
+                // throw new UnauthorizedException("Invalid Username & Password.")
+                throw new Error("Invalid Username & Password. 1");
+            }
+
+            const payload = JwtPayload.CreateReadOneObject({_email: item._email});
+
+            const signedPayload = await this.jwtService.signAsync(payload);
+
+            return {accessToken: signedPayload};
+        } catch (error) {
+            AuthService.throwServiceError(this, 45, error);
+        }
+    }
+
+    authenticateWithActiveDirectory = (username, password): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            const usernameSplitted = username.split('@');
+            const config = usernameSplitted[1] ? this.getActiveDirectoryConfig(usernameSplitted[1]) : null;
+
+            if (!config) {
+                return reject('Invalid Username');
+            }
+
+            let activedirectory = new ActiveDirectory(config);
+
+            activedirectory.authenticate(username, password, (err, auth) => {
+                if (err) {
+                    return resolve(auth);
+                }
+                return resolve(auth);
+            });
+        });
+    }
+
+    getActiveDirectoryConfig = (fqdn: string): object => {
+        switch (fqdn) {
+            case "sg.yokogawa.com":
+                return {
+                    url: 'ldap://as.ykgw.net',
+                    baseDN: 'dc=ykgw,dc=net'
+                }
+            case "ymb.yokogawa.com":
+                return {
+                    url: 'ldap://ymb.as.ykgw.net',
+                    baseDN: 'dc=ymb,dc=as,dc=ykgw,dc=net'
+                }
+            default:
+                return null;
+        }
+    }
+
+    async getUserAccessControl(user: User): Promise<string> {
+        let roleAccessDetailList = [];
+        let result = "";
+        const { _access_control } = user;
+        const accessControlIdList = JSON.parse(_access_control);
+
+        for (const accessControlId of accessControlIdList) {
+            const itemToFind = RoleAccess.CreateReadOneObject({ _role_access_id: accessControlId });
+            this.validatorService.clean(itemToFind)
+            const roleAccessResultList = await this.roleAccessRepository.find(itemToFind);
+            const roleAccessResult = roleAccessResultList[0] ? roleAccessResultList[0] : null;
+
+            if (roleAccessResult) {
+                roleAccessDetailList = [...roleAccessDetailList, roleAccessResult._access];
+            }
+        }
+
+        result = this.consolidateAccessControl(roleAccessDetailList);
+
+        return result;
+    }
+
+    consolidateAccessControl(roleAccessDetailList: Array<string>): string {
+        let accessControlConsolidated = {};
+
+        const roleAccessList = roleAccessDetailList;
+
+        for (const roleAccess of roleAccessList) {
+            const roleAccessObj = JSON.parse(roleAccess);
+
+            const roleAccessKeyLevel1List = Object.keys(roleAccessObj);
+
+            for (const roleAccessKeyLevel1 of roleAccessKeyLevel1List) {
+                if (!accessControlConsolidated[roleAccessKeyLevel1]) {
+                    accessControlConsolidated[roleAccessKeyLevel1] =
+                        roleAccessObj[roleAccessKeyLevel1];
+                }
+                const roleAccessLevel2List = roleAccessObj[roleAccessKeyLevel1];
+                const roleAccessLevel2KeyList = Object.keys(roleAccessLevel2List);
+
+                for (const roleAccessLevel2Key of roleAccessLevel2KeyList) {
+                    if (
+                        !accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key]
+                    ) {
+                        accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key] =
+                            roleAccessObj[roleAccessKeyLevel1][roleAccessLevel2Key];
+                    }
+
+                    accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key] = [
+                        ...accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key],
+                        ...roleAccessObj[roleAccessKeyLevel1][roleAccessLevel2Key]
+                    ];
+                    accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key] = [...new Set<string>(accessControlConsolidated[roleAccessKeyLevel1][roleAccessLevel2Key])];
+                }
+            }
+        }
+
+        return JSON.stringify(accessControlConsolidated);
+    }
+}
