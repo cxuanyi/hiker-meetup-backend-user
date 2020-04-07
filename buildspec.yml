@@ -5,18 +5,19 @@ phases:
     commands:
       # Install dependencies needed for running tests
       - npm install
-
       # Upgrade AWS CLI to the latest version
       - pip install --upgrade awscli
   pre_build:
     commands:
       # Discover and run unit tests in the 'tests' directory
       # - npm test
+      # Upgrade AWS CLI to the latest version
+      - npm run prestart:prod
 artifacts:
   type: zip
   files:
     - package.json
-    - ormsconfig.json
+    - ormconfig.json
     - dist/**/*
     - node_modules/**/*
     - src/config/json-config/config.json
