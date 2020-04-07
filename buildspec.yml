@@ -17,5 +17,6 @@ artifacts:
   files:
     - package.json
     - ormsconfig.json
+    - dist/**/*
     - node_modules/**/*
     - src/config/json-config/config.json
