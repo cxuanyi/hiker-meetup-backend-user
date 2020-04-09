@@ -2,6 +2,9 @@
 /dist
 /node_modules
 
+# Output
+nohup.out
+
 # Logs
 logs
 *.log
