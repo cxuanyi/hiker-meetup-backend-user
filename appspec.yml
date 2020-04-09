@@ -1,0 +1,31 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /usr/cddemo
+    overwrite: true
+permissions:
+  - object: /usr/cddemo/codedeploy
+    pattern: "*.sh"
+    owner: root
+    group: root
+    mode: 755
+    type:
+      - file
+hooks:
+  ApplicationStop:
+    - location: codedeploy/0-app-stop.sh
+      timeout: 180
+  BeforeInstall:
+    - location: codedeploy/1-before-install.sh
+      timeout: 180
+  AfterInstall:
+    - location: codedeploy/2-after-install.sh
+      timeout: 180
+  ApplicationStart:
+    - location: codedeploy/3-app-start.sh
+      timeout: 180
+  ValidateService:
+    - location: codedeploy/4-validate-service.sh
+      timeout: 180
+
