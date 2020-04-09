@@ -2,19 +2,17 @@
 
 # This script is executed before copying the source
 
-yum -y update
+apt-get update
 
-curl --silent --location https://rpm.nodesource.com/setup_4.x | bash -
-yum -y install nodejs
+apt-get upgrade
 
-npm install -g pm2
-pm2 update
+apt install nodejs
 
-export app_root=/usr/cddemo
+export app_root=/home/hiker-meetup-backend-user
 if [ -d "$app_root" ];then
-    rm -rf /usr/cddemo
-    mkdir -p /usr/cddemo
+    rm -rf /home/hiker-meetup-backend-user
+    mkdir -p /home/hiker-meetup-backend-user
 else
-    mkdir -p /usr/cddemo
+    mkdir -p /home/hiker-meetup-backend-user
 fi
 
