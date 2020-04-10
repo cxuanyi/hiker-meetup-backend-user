@@ -4,7 +4,8 @@
 
 sudo apt update
 
-sudo apt upgrade -y
+# This line give error for special case update that must require user interaction
+# sudo apt upgrade -y
 
 sudo apt install npm -y
 
