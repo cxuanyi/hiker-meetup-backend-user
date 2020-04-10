@@ -2,11 +2,11 @@
 
 # This script is executed before copying the source
 
-apt update
+sudo apt update
 
-apt upgrade
+sudo apt upgrade
 
-apt install npm
+sudo apt install npm
 
 export app_root=/home/hiker-meetup-backend-user
 if [ -d "$app_root" ];then
