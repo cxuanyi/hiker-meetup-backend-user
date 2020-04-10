@@ -1,10 +1,10 @@
 {
     "type": "postgres",
-    "host": "localhost",
+    "host": "hmu-dev-instance.cima23xzs8ac.ap-southeast-1.rds.amazonaws.com",
     "port": 5432,
     "username": "hmu_dev_user",
-    "password": "Password@123",
-    "database": "hmu_db_dev",
+    "password": "Password#123",
+    "database": "hmu_dev_db",
     "entities": [
         "dist/**/*.entity{.ts,.js}",
         "dist/**/model/*{.ts,.js}",
