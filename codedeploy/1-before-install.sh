@@ -10,9 +10,9 @@ sudo apt install npm -y
 
 export app_root=/home/hiker-meetup-backend-user
 if [ -d "$app_root" ];then
-    rm -rf /home/hiker-meetup-backend-user
-    mkdir -p /home/hiker-meetup-backend-user
+    sudo rm -rf /home/hiker-meetup-backend-user
+    sudo mkdir -p /home/hiker-meetup-backend-user
 else
-    mkdir -p /home/hiker-meetup-backend-user
+    sudo mkdir -p /home/hiker-meetup-backend-user
 fi
 

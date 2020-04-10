@@ -2,10 +2,10 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /usr/cddemo
+    destination: /home/hiker-meetup-backend-user
     overwrite: true
 permissions:
-  - object: /usr/cddemo/codedeploy
+  - object: /home/hiker-meetup-backend-user
     pattern: "*.sh"
     owner: root
     group: root
