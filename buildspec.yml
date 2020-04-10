@@ -18,6 +18,8 @@ artifacts:
   files:
     - package.json
     - ormconfig.json
+    - appspec.yml
+    - codedeploy/*
     - dist/**/*
     - node_modules/**/*
     - src/config/json-config/config.json
