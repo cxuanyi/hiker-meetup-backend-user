@@ -4,9 +4,9 @@
 
 sudo apt update
 
-sudo apt upgrade
+sudo apt upgrade -y
 
-sudo apt install npm
+sudo apt install npm -y
 
 export app_root=/home/hiker-meetup-backend-user
 if [ -d "$app_root" ];then
