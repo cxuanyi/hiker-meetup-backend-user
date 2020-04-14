@@ -13,20 +13,11 @@ export class UserController extends BaseController {
         this.class_name = this.constructor.name;
     }
 
-    // Create One Record
-    @Post('/one')
-    async createOne(@Body() item: User): Promise<any> {
-        try {
-            return await this.service.createOne(item);
-        } catch (error) {
-            UserController.logError(this, 22, error);
-            return UserController.examineError(error);
-        }
-    }
 
     // Retrieve All Records
-    @Post()
+    @Get()
     async getAll(@Body() item: User): Promise<any> {
+        console.log(item);
         try {
             return await this.service.findMany(item);
         } catch (error) {
@@ -42,28 +33,6 @@ export class UserController extends BaseController {
             return await this.service.findOne(item);
         } catch (error) {
             UserController.logError(this, 44, error);
-            return UserController.examineError(error);
-        }
-    }
-
-    // Update One Record
-    @Put('/one')
-    async updateOne(@Body() item: User): Promise<any> {
-        try {
-            return await this.service.updateOne(item);
-        } catch (error) {
-            UserController.logError(this, 55, error);
-            return UserController.examineError(error);
-        }
-    }
-
-    // Delete One Record
-    @Delete('/one')
-    async deleteOne(@Body() item: User): Promise<any> {
-        try {
-            return await this.service.deleteOne(item);
-        } catch (error) {
-            UserController.logError(this, 66, error);
             return UserController.examineError(error);
         }
     }

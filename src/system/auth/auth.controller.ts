@@ -36,13 +36,6 @@ export class AuthController extends BaseController {
     @UseGuards(AuthGuard())
     async AuthorizeOne(@GetUser() user: User): Promise<any> {
         try {
-            // console.log('user', user._access_control);
-            const { _access_control } = user;
-            // const accessControlIdlist = JSON.parse(_access_control);
-
-            // const accessControlStringfied = await this.service.getUserAccessControl(user);
-            // user['_access_control'] = accessControlStringfied;
-
             return user;
         } catch (error) {
             AuthController.logError(this, 39, error);

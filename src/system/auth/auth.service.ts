@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ValidatorService } from '../../common/validator/validator.service';
 import { BaseService } from '../../common/service/base.service';
 import { User } from '../_entity/user.entity';
-import { RoleAccess } from './_entity-dto/roleaccess.entity';
 import { Auth } from './_entity-dto/auth.entity';
 import { AuthAuthenticateOneDto } from './_entity-dto/authauthenticateone.dto';
 import { JwtPayload } from '../_entity/jwt-payload.entity';
@@ -19,8 +18,6 @@ export class AuthService extends BaseService {
     constructor(
         @InjectRepository(User)
         private repository: Repository<User>,
-        @InjectRepository(RoleAccess)
-        private roleAccessRepository: Repository<RoleAccess>,
         private jwtService: JwtService,
         private readonly validatorService: ValidatorService
     ) {
@@ -90,19 +87,6 @@ export class AuthService extends BaseService {
     async getUserAccessControl(user: User): Promise<string> {
         let roleAccessDetailList = [];
         let result = "";
-        const { _access_control } = user;
-        const accessControlIdList = JSON.parse(_access_control);
-
-        for (const accessControlId of accessControlIdList) {
-            const itemToFind = RoleAccess.CreateReadOneObject({ _role_access_id: accessControlId });
-            this.validatorService.clean(itemToFind)
-            const roleAccessResultList = await this.roleAccessRepository.find(itemToFind);
-            const roleAccessResult = roleAccessResultList[0] ? roleAccessResultList[0] : null;
-
-            if (roleAccessResult) {
-                roleAccessDetailList = [...roleAccessDetailList, roleAccessResult._access];
-            }
-        }
 
         result = this.consolidateAccessControl(roleAccessDetailList);
 

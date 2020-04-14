@@ -1,6 +1,4 @@
-import { BaseEntity } from '../../../common/_entity/base.entity';
-
-export class Auth extends BaseEntity {
+export class Auth {
     public _user_id?: string;
     public _email?: string;
     public _password?: string;
@@ -10,8 +8,6 @@ export class Auth extends BaseEntity {
         _email?: string,
         _password?: string
     ) {
-        super();
-        this.class_name = this.constructor.name;
         this._email = _email;
         this._password = _password;
     }

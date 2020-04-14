@@ -1,6 +1,5 @@
-import { BaseEntity } from '../../common/_entity/base.entity';
 
-export class JwtPayload extends BaseEntity {
+export class JwtPayload {
     public _user_id?: string;
     public _email?: string;
 
@@ -8,8 +7,6 @@ export class JwtPayload extends BaseEntity {
         _user_id?: string,
         _email?: string,
     ) {
-        super();
-        this.class_name = this.constructor.name;
         this._user_id = _user_id;
         this._email = _email;
     }
