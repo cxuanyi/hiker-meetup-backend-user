@@ -10,7 +10,8 @@ export STRING=fail
 export FILE=./test_report/test_result.txt
 
 if  grep -q "$STRING" "$FILE" ; then
-    echo 'Unit Test FAILED!!!!!!!!!!!!!!!!!!!!'; 
+    echo 'Unit Test FAILED!!!!!!!!!!!!!!!!!!!!';
+    exit 1;
 else
-    echo 'Unit Test PASSED!~~~~~~~~~~~~~~~~~~~~~~~~~'; 
+    echo 'Unit Test PASSED!~~~~~~~~~~~~~~~~~~~~~~~~~';
 fi
