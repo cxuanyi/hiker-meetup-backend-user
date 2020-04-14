@@ -41,7 +41,7 @@ describe('UserService', () => {
       "_user_id": "2",
       "_email": "pepepoopoo@pepoopepoo.com",
       "_user_name": "pepepoopoo",
-      "_description": ""
+      "_description": "poo poo poo poo pe pe pe pe"
     });
   });
 });
