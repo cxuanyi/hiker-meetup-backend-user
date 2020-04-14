@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 
 import { ValidatorService } from '../../common/validator/validator.service';
-import { BaseService } from '../../common/service/base.service';
 import { User } from '../_entity/user.entity';
 import { Auth } from './_entity-dto/auth.entity';
 import { AuthAuthenticateOneDto } from './_entity-dto/authauthenticateone.dto';
@@ -14,20 +13,17 @@ import { JwtPayload } from '../_entity/jwt-payload.entity';
 import * as ActiveDirectory from 'activedirectory';
 
 @Injectable()
-export class AuthService extends BaseService {
+export class AuthService {
     constructor(
         @InjectRepository(User)
         private repository: Repository<User>,
         private jwtService: JwtService,
         private readonly validatorService: ValidatorService
     ) {
-        super();
-        this.class_name = this.constructor.name;
     }
 
 
     async authenticateUser(itemDto: AuthAuthenticateOneDto): Promise<{accessToken: string}> {
-        try {
             const item = Auth.CreateReadOneObject(itemDto);
             this.validatorService.clean(item);
             let user = await this.repository.findOne({ _email: itemDto._email });
@@ -42,9 +38,6 @@ export class AuthService extends BaseService {
             const signedPayload = await this.jwtService.signAsync(payload);
 
             return {accessToken: signedPayload};
-        } catch (error) {
-            AuthService.throwServiceError(this, 45, error);
-        }
     }
 
     authenticateWithActiveDirectory = (username, password): Promise<any> => {

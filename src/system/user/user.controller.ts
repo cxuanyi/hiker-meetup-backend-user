@@ -19,7 +19,7 @@ export class UserController extends BaseController {
     async getAll(@Body() item: User): Promise<any> {
         console.log(item);
         try {
-            return await this.service.findMany(item);
+            return await this.service.getUsers(item);
         } catch (error) {
             UserController.logError(this, 33, error);
             return UserController.examineError(error);

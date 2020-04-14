@@ -1,17 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UserRepository } from '../_entity/user.repository';
-// import { User } from '../_entity/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { User } from '../_entity/user.entity';
+
+const mockUserRepository = () => ({
+  getUsers: jest.fn()
+});
 
 describe('UserService', () => {
-  let service: UserService;
+  let service;
   let userRepository;
-
-  const mockUserRepository = () => ({
-
-  });
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -20,11 +18,30 @@ describe('UserService', () => {
       ],
     }).compile();
 
-    // userRepository = await module.get<User>(User);
-    // service = await module.get<UserService>(UserService);
+    service = await module.get<UserService>(UserService);
+    userRepository = await module.get<UserRepository>(UserRepository);
   });
 
-  it('FindMany User', async () => {
-    return true;
+  it('User: Get ALL users', async () => {
+    // Without this line, the console.log() inside [await service.getUsers(userFilter);] will return empty
+    userRepository.getUsers.mockResolvedValue({
+      "_user_id": "2",
+      "_email": "pepepoopoo@pepoopepoo.com",
+      "_user_name": "pepepoopoo",
+      "_description": "poo poo poo poo pe pe pe pe"
+    });
+
+    expect(userRepository.getUsers).not.toHaveBeenCalled();
+
+    const userFilter: User = new User();
+    const users = await service.getUsers(userFilter);
+
+    expect(userRepository.getUsers).toHaveBeenCalled();
+    expect(users).toEqual({
+      "_user_id": "2",
+      "_email": "pepepoopoo@pepoopepoo.com",
+      "_user_name": "pepepoopoo",
+      "_description": "poo poo poo poo pe pe pe pe"
+    });
   });
 });
