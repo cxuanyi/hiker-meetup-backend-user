@@ -1,34 +1,31 @@
+import { passportJwtSecret } from 'jwks-rsa';
+import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt'
-import { JwtPayload } from './_entity/jwt-payload.entity';
-
-import { ConfigService } from '../config/config.service';
-import { ValidatorService } from '../common/validator/validator.service';
-import { User } from './_entity/user.entity';
-import { UserService } from './user/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    public constructor(
-        private readonly configService: ConfigService,
-        private userService: UserService,
-        private readonly validatorService: ValidatorService) {
+    constructor() {
         super({
+            secretOrKeyProvider: passportJwtSecret({
+                cache: true,
+                rateLimit: true,
+                jwksRequestsPerMinute: 5,
+                jwksUri: 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_Krx5EBNva/.well-known/jwks.json',
+            }),
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: configService.getValue('jwt-secret')
+            aud: '31it8rd08fvmj8evp5po8s73oc',
+            iss: 'https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_Krx5EBNva',
+            alg: "RS256"
         });
     }
 
-    async validate(payload: JwtPayload): Promise<any> {
-        const { _email } = payload;
-        
-        //retrieve user information and add access control
-        const user = await this.userService.findOne(<User>{ _email });
+    validate(payload: any, done: VerifiedCallback) {
+        if (!payload) {
+            done(new UnauthorizedException(), false); // 2
+        }
 
-        if (!user)
-            throw new UnauthorizedException();
-        
-        return user;
+        return done(null, payload);
     }
 }

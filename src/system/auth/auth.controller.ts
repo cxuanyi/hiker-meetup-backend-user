@@ -17,26 +17,12 @@ export class AuthController extends BaseController {
         this.class_name = this.constructor.name;
     }
 
-    // Create One Record
-    @Post('/login')
-    @UsePipes(ValidationPipe)
-    async AuthenticateOne(@Body() item: AuthAuthenticateOneDto): Promise<any> {
-        try {
-            console.log(`Logged in using AD: ${item._email}`);
-            const result = await this.service.authenticateUser(item);
-            console.log('result', result);
-            return result;
-        } catch (error) {
-            AuthController.logError(this, 28, error);
-            return AuthController.examineError(error);
-        }
-    }
-
     @Post('/get-user-data')
-    @UseGuards(AuthGuard())
-    async AuthorizeOne(@GetUser() user: User): Promise<any> {
+    @UseGuards(AuthGuard('jwt'))
+    async AuthorizeOne(): Promise<any> {
         try {
-            return user;
+            console.log('Testing Authentication successful');
+            return { test: "hello" };
         } catch (error) {
             AuthController.logError(this, 39, error);
             return AuthController.examineError(error);

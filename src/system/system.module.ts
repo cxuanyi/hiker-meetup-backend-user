@@ -21,17 +21,7 @@ import { UserController } from './user/user.controller';
     TypeOrmModule.forFeature([
       UserRepository
     ]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.getValue('jwt-secret'),
-        signOptions: {
-            expiresIn: 36000,
-        },
-      }),
-      inject: [ConfigService]
-    }),
+    PassportModule
   ],
   controllers: [
     AuthController,
