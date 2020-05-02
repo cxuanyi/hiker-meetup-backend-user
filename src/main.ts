@@ -6,7 +6,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors()
-  // app.useStaticAssets(join(__dirname, '..', 'uploadfiles'),);
   await app.listen(4000);
 }
 bootstrap();
