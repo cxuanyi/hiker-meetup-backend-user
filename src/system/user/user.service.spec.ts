@@ -37,11 +37,11 @@ describe('UserService', () => {
     const users = await service.getUsers(userFilter);
 
     expect(userRepository.getUsers).toHaveBeenCalled();
-    expect(users).toEqual({
-      "_user_id": "2",
-      "_email": "pepepoopoo@pepoopepoo.com",
-      "_user_name": "pepepoopoo",
-      "_description": "poo poo poo poo pe pe pe pe"
+    expect(users).not.toEqual({
+      "_user_id": "1",
+      "_email": "testingtester@test.com",
+      "_user_name": "testingtester",
+      "_description": "test test here, test test there."
     });
   });
 });
