@@ -16,8 +16,8 @@ export class UserService {
     async getUsers(item: User): Promise<any> {
         const users = await this.userRepository.getUsers(item);
         const currentDateTime = new Date();
-
-        const hashResult = crypto.createHash('md5').update(JSON.stringify(users) + currentDateTime.getSeconds()).digest("hex");
+        const stringToHash = JSON.stringify(users) + currentDateTime.getSeconds() + (Math.random() * 10) + (Math.random() * 10);
+        const hashResult = crypto.createHash('sha512').update(JSON.stringify(users) + currentDateTime.getSeconds()).digest("hex");
 
         return { hash: hashResult };
     }
