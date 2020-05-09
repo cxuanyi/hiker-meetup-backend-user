@@ -17,8 +17,8 @@ export class UserController extends BaseController {
     // Retrieve All Records
     @Get()
     async getAll(@Body() item: User): Promise<any> {
-        console.log(item);
         try {
+            //test
             return await this.service.getUsers(item);
         } catch (error) {
             UserController.logError(this, 33, error);

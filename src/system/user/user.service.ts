@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
+import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -13,16 +13,13 @@ export class UserService {
         private userRepository: UserRepository
     ) {}
 
-    async getUsers(item: User): Promise<User[]> {
+    async getUsers(item: User): Promise<any> {
         const users = await this.userRepository.getUsers(item);
-        
-        
-        console.log('CHECK HERE users: ', users);
-        // if (!users) {
-        //     throw new NotFoundException();
-        // }
+        const currentDateTime = new Date();
 
-        return users;
+        const hashResult = crypto.createHash('md5').update(JSON.stringify(users) + currentDateTime.getSeconds()).digest("hex");
+
+        return { hash: hashResult };
     }
 
     async findOne(item: User): Promise<User> {
