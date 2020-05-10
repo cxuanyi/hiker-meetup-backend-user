@@ -30,7 +30,7 @@ export class UserService {
         hashResult = crypto.createHash('sha512').update(hashResult + (Math.random() * 10)).digest("hex");
         hashResult = crypto.createHash('sha512').update(hashResult + (Math.random() * 10)).digest("hex");
 
-        return { hash: `SavingDataOutCost` };
+        return { hash: "SavingDataOutCost" };
     }
 
     async findOne(item: User): Promise<User> {
