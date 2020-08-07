@@ -32,7 +32,7 @@
     "@nestjs/typeorm": "^6.1.2",
     "activedirectory": "^0.7.2",
     "adm-zip": "^0.4.13",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-validator": "^0.10.2",
     "hbs": "^4.1.0",
     "jwks-rsa": "^1.8.0",
