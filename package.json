@@ -33,7 +33,7 @@
     "activedirectory": "^0.7.2",
     "adm-zip": "^0.4.13",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.10.2",
+    "class-validator": "^0.14.0",
     "hbs": "^4.1.0",
     "jwks-rsa": "^1.8.0",
     "passport": "^0.4.1",
